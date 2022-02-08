@@ -2,6 +2,9 @@
 
 A simple web app that can be coupled with any music downloader to stream your music collection across your local network!
 
+### WARNING
+This is an early project and nothing is subject to stay the same!
+
 ## Setup
 
  - Make sure your music is structured in a hierarchy of {artist}/{album}/{cover.jpg, *.mp3}

@@ -1,35 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/songs.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <title>Archive</title>
-</head>
-<body>
-  <ul class="songs">
-    <?php
-      include "php/songs.php";
-    ?>
-  </ul>
-</body>
-<script>
-  $(".song").click(function() {
-    let gteq = $('ul li');
+<?php
 
-    let list_songs = $.map(gteq, function(i) {
-      return {
-        title: $(i).data("title"),
-        path: $(i).data("path"),
-        artist: $(i).data("artist"),
-      };
-    });
+//this will load the mustache template library
+require_once 'mustache/src/Mustache/Autoloader.php';
+Mustache_Autoloader::register();
 
-    console.log(list_songs);
+// this will create a new mustache template engine
+$mustache = new Mustache_Engine;
 
-    window.top.postMessage({type: "play", songs: list_songs, index: $(this).index()}, "*");
-  })
-</script>
-</html>
+$url = urldecode($_SERVER["REQUEST_URI"]);
+
+parse_str(parse_url($url, PHP_URL_QUERY), $parsed_url);
+
+$artist = $parsed_url["n"];
+$album = $parsed_url["a"];
+
+
+$song_html = file_get_contents('templates/song.html');
+$songs_html = file_get_contents('templates/songs.html');
+
+$head = file_get_contents('templates/head.html');
+$foot = file_get_contents('templates/foot.html');
+
+$header_data = ["pagetitle" => "player"];
+$footer_data = [
+];
+
+// get all songs 
+$song_dirs = glob("/mnt/music/$artist/$album/*.{mp3,flac}", GLOB_BRACE);
+$song_vars = "";
+
+foreach($song_dirs as $song) {
+    $song = basename($song);
+
+    $title = implode('.', explode('.', explode(' - ', $song, 2)[1], -1)); 
+
+    $song_vars = $song_vars . $mustache->render($song_html, array("title" => $title, "src" => "music/$artist/$album/$song", "artist" => $artist, "album" => $album));
+    
+}
+
+echo $mustache->render($head, $header_data) . PHP_EOL;
+echo $mustache->render($songs_html, array("songs" => $song_vars)) . PHP_EOL;
+echo $mustache->render($foot, $footer_data) . PHP_EOL;

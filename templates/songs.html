@@ -1,0 +1,21 @@
+<div class="songs">
+    <ul>
+        {{{songs}}}
+    </ul>
+</div>
+<script>
+    $(".song").click(function() {
+      let songs = $('ul li');
+  
+      songs = $.map(songs, function(i) {
+        return {
+          title: $(i).data("title"),
+          src: $(i).data("src"),
+          artist: $(i).data("artist"),
+          album: $(i).data("album"),
+        };
+      });
+    
+      window.top.postMessage({type: "play", songs: songs, index: $(this).index()}, "*");
+    })
+</script>

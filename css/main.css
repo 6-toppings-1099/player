@@ -73,3 +73,8 @@ img {
     max-width: 300px;
     padding: 0;
   }
+  
+  #bar {
+      height: 3px;
+      background-color: #e6e6e6;
+  }

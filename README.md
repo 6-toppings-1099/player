@@ -16,5 +16,5 @@ This is an early project and nothing is subject to stay the same!
 
  - Playlists 
  - better queue system
- - album titles overlaping albums in bottom left corner
+ - artists separated by letter
  - much much more!

@@ -21,6 +21,8 @@ $footer_data = [
 // get all artists 
 $artist_dirs = glob('/mnt/music/*', GLOB_ONLYDIR);
 $artists_vars = "";
+usort($artist_dirs, 'strnatcasecmp');
+
 
 foreach($artist_dirs as $artist) {
     $artist = basename($artist);
